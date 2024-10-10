@@ -1,5 +1,6 @@
 package com.xyvona.flavorville.ui.screen.components
 
+import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -18,22 +19,30 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
 import androidx.constraintlayout.compose.ConstraintLayout
 import com.xyvona.flavorville.R
+import com.xyvona.flavorville.data.ProductPreviewState
 import com.xyvona.flavorville.ui.theme.AppTheme
 
 @Composable
 fun ProductPreviewSection(
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
+    state: ProductPreviewState
 ) {
     Box(
         modifier = modifier.height(IntrinsicSize.Max)
-    ){
-        ProductBackground()
+    ) {
+        ProductBackground(
+            modifier = Modifier.padding(bottom = 24.dp)
+        )
         Content(
-            modifier = Modifier.statusBarsPadding()
+            state = state,
+            modifier = Modifier
+                .statusBarsPadding()
+                .padding(top = 24.dp)
         )
     }
 }
@@ -57,7 +66,8 @@ private fun ProductBackground(
 
 @Composable
 private fun Content(
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
+    state: ProductPreviewState
 ) {
     ConstraintLayout(
         modifier = modifier.fillMaxWidth(),
@@ -71,6 +81,26 @@ private fun Content(
                 .constrainAs(actionBar) {
                     top.linkTo(parent.top)
                 }
+        )
+
+        Image(
+            painter = painterResource(id = R.drawable.img_burger),
+            contentDescription = null,
+            contentScale = ContentScale.FillHeight,
+            modifier = Modifier
+                .height(256.dp)
+                .constrainAs(productImg) {
+                    end.linkTo(parent.end)
+                    top.linkTo(anchor = actionBar.bottom, margin = 20.dp)
+                }
+        )
+
+        ProductHighlights(
+            highlights = state.highlights,
+            modifier = Modifier.constrainAs(highlights) {
+                start.linkTo(anchor = parent.start, margin = 19.dp)
+                top.linkTo(productImg.top)
+            }
         )
     }
 }
